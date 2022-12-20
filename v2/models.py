@@ -1,5 +1,5 @@
 from django.db import models
-from v1.models import User
+from user.models import User
 
 class Service(models.Model):
     name = models.CharField(max_length=40)
