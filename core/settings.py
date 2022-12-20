@@ -23,7 +23,9 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'v1.apps.V1Config',
     'v2.apps.V2Config',
+    'landing.apps.LandingConfig',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
