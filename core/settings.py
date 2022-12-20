@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
-    'user.apps.UserConfig',
+    'authentication.apps.AuthenticationConfig',
     'v1.apps.V1Config',
     'v2.apps.V2Config',
     'rest_framework',
@@ -119,4 +119,4 @@ CACHES = {
     },
 }
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "authentication.User"
