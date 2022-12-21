@@ -1,21 +1,48 @@
 from django.db import models
 from authentication.models import User
+from django.utils.translation import gettext_lazy as _
 
 class Service(models.Model):
-    name = models.CharField(max_length=40)
+
+    class Service(models.TextChoices):
+        YOUTUBE = 'YT', _('Youtube')
+        SPOTIFY = 'SP', _('Spotify')
+        NETFLIX = 'NF', _('Netflix')
+        AMAZON = 'AP', _('Amazon Video')
+        START = 'ST', _('Start+')
+        PARAMOUNT = 'PM', _('Paramount+')
+
+    name = models.CharField(
+        max_length=2,
+        choices=Service.choices,
+        default=Service.NETFLIX,
+    )
     description = models.CharField(max_length=300)
     logo = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        return self.name
+
+
 class PaymentUser(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pay_users")
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="ser_users")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="pay_users")
+    service = models.ForeignKey(
+        Service, on_delete=models.CASCADE, related_name="ser_users")
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    payment_date = models.DateTimeField(null=False, blank=False)
+    payment_date = models.DateField(auto_now_add=True, null=False, blank=False)
     expiration_date = models.DateField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return self.name
+
+
 class ExpiredPayment(models.Model):
-    payment_user = models.ForeignKey(PaymentUser, on_delete=models.CASCADE, related_name="expired_pay_users")
-    penalti_fee_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
- 
-    
+    payment_user = models.ForeignKey(
+        PaymentUser, on_delete=models.CASCADE, related_name="e_p_u")
+    penalti_fee_amount = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self) -> str:
+        return self.payment_user
