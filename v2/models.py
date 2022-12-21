@@ -35,7 +35,7 @@ class PaymentUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.service
 
 
 class ExpiredPayment(models.Model):

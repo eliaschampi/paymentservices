@@ -6,8 +6,6 @@ SECRET_KEY = 'django-insecure-_31v_9$w=neaq8)v+$1axt1mjr)8o(&zfwvmo35(j(ebyrkvc_
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,6 +19,7 @@ INSTALLED_APPS = [
     'v2.apps.V2Config',
     'landing.apps.LandingConfig',
     'rest_framework',
+    'corsheaders',
     'drf_yasg',
 ]
 
@@ -32,6 +31,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -62,6 +62,12 @@ DATABASES = {
     }
 }
 
+CORS_ORIGIN_WHITELIST = (
+    'ttp://127.0.0.1:8000',
+    'http://localhost:8000',
+)
+
+ALLOWED_HOSTS = ["*"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
