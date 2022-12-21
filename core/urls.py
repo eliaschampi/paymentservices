@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.http import HttpResponse
 from django.urls import path, re_path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -23,6 +22,7 @@ urlpatterns = [
     path("", include("landing.urls")),
     path("users/", include("authentication.urls")),
     re_path(r"^api/v1/", include("v1.urls")),
+    re_path(r"^api/v2/", include("v2.urls")),
 
     # Documentacion de mi proyecto
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
