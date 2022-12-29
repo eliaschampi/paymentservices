@@ -64,7 +64,7 @@ class PaymentUserSerializer(serializers.ModelSerializer):
 class ExpiredPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpiredPayment
-        fields = ('payment_user_id', 'penalty_fee_amount')
+        fields = ('payment_user_id', 'penalti_fee_amount')
 
     def validate_penalty_fee_amount(self, value):
         if value <= 0:
@@ -91,7 +91,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["email", "username", "password", "is_staff"]
 
-  
     def create(self, validated_data):
         password = validated_data.pop("password")
         user = super().create(validated_data)
@@ -100,7 +99,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def validate_email(self, value):
-     
+
         email_exists = User.objects.filter(email=value).exists()
         if email_exists:
             raise ValidationError("El email ya ha sido usado")

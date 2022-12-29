@@ -52,14 +52,6 @@ class PaymentUserPermisionMixin(CustomPermissionMixin, MyBaseModelPermision):
         'destroy': [IsAuthenticated, IsAdminUser],
     }
 
-
-class ExpiredPermisionMixin(CustomPermissionMixin, MyBaseModelPermision):
-    permissionsByAction = {
-        'list': [IsAuthenticated],
-        'create': [IsAuthenticated]
-    }
-
-
 class UserPermisionMixin(CustomPermissionMixin, MyBaseModelPermision):
     permissionsByAction = {
         'list': [IsAuthenticated],

@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
-from .permissions import ServicePermisionMixin, PaymentUserPermisionMixin, ExpiredPermisionMixin, UserPermisionMixin
+from rest_framework.permissions import IsAuthenticated
+from .permissions import ServicePermisionMixin, PaymentUserPermisionMixin, UserPermisionMixin
 from .response import ResponseMixin
 from .models import Service, PaymentUser, ExpiredPayment
 from authentication.models import User
@@ -27,9 +28,10 @@ class PaymentUserApi(PaymentUserPermisionMixin, ResponseMixin, viewsets.ModelVie
     ordering = ("-created_at")
 
 
-class ExpiredApi(ExpiredPermisionMixin, ResponseMixin, generics.ListCreateAPIView):
+class ExpiredApi(ResponseMixin, generics.ListCreateAPIView):
     queryset = ExpiredPayment.objects.all()
     pagination_class = MyPagination
+    permission_classes = (IsAuthenticated,)
     authentication_classes = [JWTAuthentication]
     serializer_class = ExpiredPaymentSerializer
 

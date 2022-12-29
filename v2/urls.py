@@ -9,4 +9,5 @@ router.register(r"users", api.UserApi, basename="users")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path(r"expireds/", api.ExpiredApi.as_view(), name="expireds")
 ]
