@@ -9,6 +9,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .serializers import ServicesSerializer, PaymentUserSerializer, UserSerializer, ExpiredPaymentSerializer
 from .pagination import MyPagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from .throttles import CustomRateThrottle, CustomPaymentRateThrottle
 
 
 class ServiceApi(ServicePermisionMixin, ResponseMixin, viewsets.ModelViewSet):
@@ -16,6 +17,7 @@ class ServiceApi(ServicePermisionMixin, ResponseMixin, viewsets.ModelViewSet):
     pagination_class = MyPagination
     serializer_class = ServicesSerializer
     authentication_classes = [JWTAuthentication]
+    throttle_classes = [CustomRateThrottle]
 
 
 class PaymentUserApi(PaymentUserPermisionMixin, ResponseMixin, viewsets.ModelViewSet):
@@ -26,6 +28,7 @@ class PaymentUserApi(PaymentUserPermisionMixin, ResponseMixin, viewsets.ModelVie
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ("payment_date", "expiration_date")
     ordering = ("-created_at")
+    throttle_classes = [CustomPaymentRateThrottle]
 
 
 class ExpiredApi(ResponseMixin, generics.ListCreateAPIView):
@@ -34,12 +37,14 @@ class ExpiredApi(ResponseMixin, generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = [JWTAuthentication]
     serializer_class = ExpiredPaymentSerializer
-
+    throttle_scope = "expired_throttle"
+    throttle_classes = [CustomRateThrottle]
 
 class UserApi(UserPermisionMixin, ResponseMixin, viewsets.ViewSet):
     queryset = User.objects.all()
     authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
+    throttle_classes = [CustomRateThrottle]
 
     def list(self, request):
         queryset = self.queryset

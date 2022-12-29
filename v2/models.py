@@ -1,6 +1,8 @@
 from django.db import models
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Service(models.Model):
@@ -47,3 +49,13 @@ class ExpiredPayment(models.Model):
 
     def __str__(self) -> str:
         return self.payment_user
+
+@receiver(post_save, sender=PaymentUser)
+def create_expired_payment(sender, instance, created, **kwargs):
+    if instance.payment_date > instance.expiration_date:
+        ExpiredPayment.objects.create(
+            payment_user_id=instance.id,
+            penalti_fee_amount=100
+        )
+
+post_save.connect(create_expired_payment, sender=PaymentUser)

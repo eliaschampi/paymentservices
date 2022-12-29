@@ -123,13 +123,9 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "core.errhandler.my_exception_handler",
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
     "DEFAULT_THROTTLE_CLASSES": (
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle"
-    ),
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "2000/day",
-        "user": "2000/day"
-    }
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.AnonRateThrottle"
+    )
 }
 
 CACHES = {
