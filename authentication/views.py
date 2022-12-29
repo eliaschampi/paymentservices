@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from rest_framework import viewsets, generics, status
+from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from .serializers import SignUpSerializer, GetUserSerializer
 from .tokens import create_jwt_pair_for_user
 from .models import User
+
 
 class SingUpView(generics.GenericAPIView):
 
@@ -23,8 +24,10 @@ class SingUpView(generics.GenericAPIView):
 
         return Response(
             data={
+                "status_code": status.HTTP_201_CREATED,
                 "message": "Usuario creado correctamente",
-                "data": serializer.data
+                "data": serializer.data,
+                "success": True
             },
             status=status.HTTP_201_CREATED
         )
@@ -42,13 +45,15 @@ class LoginView(APIView):
         if user is None:
             return Response(data={"message": "Sus credenciales son incorrectas"})
 
-        id_user = User.objects.get(email=email)
+        user = User.objects.get(email=email)
 
         return Response(
             data={
+                "status_code": status.HTTP_201_CREATED,
                 "message": "Inicio de sesión exitoso",
-                "id": id_user.id,
-                "tokens": create_jwt_pair_for_user(user=user)
+                "data": GetUserSerializer(user).data,
+                "tokens": create_jwt_pair_for_user(user=user),
+                "success": True
             },
             status=status.HTTP_200_OK
         )
@@ -59,9 +64,3 @@ class LoginView(APIView):
             data={"user": str(request.user), "auth": str(request.auth)},
             status=status.HTTP_200_OK
         )
-
-
-
-class GetUsers(viewsets.ReadOnlyModelViewSet):
-    serializer_class = GetUserSerializer
-    queryset = User.objects.all()

@@ -1,7 +1,6 @@
 from rest_framework.views import exception_handler
 from http import HTTPStatus
 from typing import Any
-
 from rest_framework.views import Response
 
 
