@@ -1,10 +1,13 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import ServiceListOrCreate, ServiceRetrieveUpdateDestroyAPIView
+from rest_framework import routers
+from . import api
 
-#router = DefaultRouter()
+router = routers.SimpleRouter()
+router.register(r"services", api.ServiceApi, basename="services")
+router.register(r"payments", api.PaymentUserApi, basename="payments")
+router.register(r"users", api.UserApi, basename="users")
 
 urlpatterns = [
-    path("services/", ServiceListOrCreate.as_view(), name="service"),
-    path("services/", ServiceRetrieveUpdateDestroyAPIView.as_view(), name="service")
+    path("", include(router.urls)),
+    path(r"expireds/", api.ExpiredApi.as_view(), name="expireds")
 ]

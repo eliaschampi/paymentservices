@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Service, PaymentUser, ExpiredPayment
+from authentication.models import User
 from django.utils import timezone
+from rest_framework.validators import ValidationError
 
 
 class ServicesSerializer(serializers.ModelSerializer):
@@ -59,10 +61,10 @@ class PaymentUserSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class ExpiredPayment(serializers.ModelSerializer):
+class ExpiredPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpiredPayment
-        fields = ('payment_user_id', 'penalty_fee_amount')
+        fields = ('payment_user_id', 'penalti_fee_amount')
 
     def validate_penalty_fee_amount(self, value):
         if value <= 0:
@@ -70,3 +72,35 @@ class ExpiredPayment(serializers.ModelSerializer):
                 "El monto debe ser mayor que cero."
             )
         return value
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    email = serializers.CharField(
+        required=True,
+        max_length=80,
+        error_messages={'required': 'Correo es obligatorio'}
+    )
+    username = serializers.CharField(
+        required=True,
+        max_length=300,
+        error_messages={'required': 'Usuario es obligatorio'}
+    )
+
+    class Meta:
+        model = User
+        fields = ["email", "username", "password", "is_staff"]
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = super().create(validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def validate_email(self, value):
+
+        email_exists = User.objects.filter(email=value).exists()
+        if email_exists:
+            raise ValidationError("El email ya ha sido usado")
+        return super().validate(value)

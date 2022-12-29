@@ -1,12 +1,8 @@
-from rest_framework import routers
+
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from .views import SingUpView, LoginView
 
-from .views import SingUpView, LoginView, GetUsers
-
-router = routers.DefaultRouter()
-
-router.register("", GetUsers)
 
 urlpatterns = [
     path("signup/", SingUpView.as_view(), name="signup"),
@@ -15,5 +11,3 @@ urlpatterns = [
     path("jwt/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("jwt/verify/", TokenVerifyView.as_view(), name="token_verify")
 ]
-
-urlpatterns += router.urls
