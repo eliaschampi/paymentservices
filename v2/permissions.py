@@ -11,13 +11,12 @@ class IsAdminUser(BasePermission):
 
 
 class MyBaseModelPermision:
+
     def get_permissions(self):
+
         try:
-
             return [permission() for permission in self.permissionsByAction[self.action]]
-
         except KeyError:
-
             return [permission() for permission in self.permission_classes]
 
 
@@ -38,6 +37,16 @@ class ServicePermisionMixin(CustomPermissionMixin, MyBaseModelPermision):
     permissionsByAction = {
         'list': [IsAuthenticated],
         'create': [IsAuthenticated, IsAdminUser],
+        'post': [IsAuthenticated, IsAdminUser],
+        'put': [IsAuthenticated, IsAdminUser],
+        'destroy': [IsAuthenticated, IsAdminUser],
+    }
+
+
+class PaymentUserPermisionMixin(CustomPermissionMixin, MyBaseModelPermision):
+    permissionsByAction = {
+        'list': [IsAuthenticated],
+        'create': [IsAuthenticated],
         'post': [IsAuthenticated, IsAdminUser],
         'put': [IsAuthenticated, IsAdminUser],
         'destroy': [IsAuthenticated, IsAdminUser],
