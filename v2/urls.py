@@ -1,10 +1,9 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import ServiceListOrCreate, ServiceRetrieveUpdateDestroyAPIView
-
-#router = DefaultRouter()
+from django.urls import path
+from . import api
 
 urlpatterns = [
-    path("services/", ServiceListOrCreate.as_view(), name="service"),
-    path("services/", ServiceRetrieveUpdateDestroyAPIView.as_view(), name="service")
+    path(r'services/', api.ServiceList.as_view(), name='service-list'),
+    path(r'services/create', api.ServiceCreate.as_view(), name='service-create'),
+    path(r'services/update/<int:pk>', api.ServiceUpdate.as_view(), name='service-update'),
+    path(r'services/destroy/<int:pk>', api.ServiceDestroy.as_view(), name='service-destroy'),
 ]
