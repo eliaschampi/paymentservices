@@ -43,13 +43,22 @@ class LoginView(APIView):
         user: User = authenticate(email=email, password=password)
 
         if user is None:
-            return Response(data={"message": "Sus credenciales son incorrectas"})
-
+            return Response(
+                data={
+                    "status_code": status.HTTP_400_BAD_REQUEST,
+                    "message": "credenciales de autenticación no validos",
+                    "data": None,
+                    "tokens": None,
+                    "success": False
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
         user = User.objects.get(email=email)
 
         return Response(
             data={
-                "status_code": status.HTTP_201_CREATED,
+                "status_code": status.HTTP_200_OK,
                 "message": "Inicio de sesión exitoso",
                 "data": GetUserSerializer(user).data,
                 "tokens": create_jwt_pair_for_user(user=user),
